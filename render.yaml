@@ -1,0 +1,16 @@
+services:
+  - type: web
+    name: deal-velocity
+    runtime: node
+    plan: free
+    autoDeploy: true
+    buildCommand: npm ci && npm run build
+    startCommand: npm start
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_VERSION
+        value: 22.13.0
+      - key: DATA_PROVIDER
+        value: zillow_research
+      - key: DEFAULT_MARKET_REGION
+        value: Tampa, FL
