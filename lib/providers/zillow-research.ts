@@ -83,11 +83,21 @@ function latestMetric(rows: string[][], region: string, key: DatasetKey): Market
   const header = rows[0] ?? [];
   const row = findRegionRow(rows, region);
   const dataset = DATASETS[key];
-  if (!row) return { label: dataset.label, value: null, unit: dataset.unit, asOf: null };
+  if (!row) return { label: dataset.label, value: null, unit: dataset.unit, asOf: null, history: [] };
 
   const datedColumns = header
     .map((column, index) => ({ column, index }))
     .filter(({ column }) => /^\d{4}-\d{2}-\d{2}$/.test(column))
+    .reverse();
+
+  const history = datedColumns
+    .flatMap(({ column, index }) => {
+      const raw = row[index];
+      if (!raw?.trim()) return [];
+      const value = Number(raw.replaceAll(",", ""));
+      return Number.isFinite(value) ? [{ date: column, value }] : [];
+    })
+    .slice(0, 12)
     .reverse();
 
   for (const { column, index } of datedColumns) {
@@ -95,11 +105,11 @@ function latestMetric(rows: string[][], region: string, key: DatasetKey): Market
     if (!raw?.trim()) continue;
     const value = Number(raw.replaceAll(",", ""));
     if (Number.isFinite(value)) {
-      return { label: dataset.label, value, unit: dataset.unit, asOf: column };
+      return { label: dataset.label, value, unit: dataset.unit, asOf: column, history };
     }
   }
 
-  return { label: dataset.label, value: null, unit: dataset.unit, asOf: null };
+  return { label: dataset.label, value: null, unit: dataset.unit, asOf: null, history };
 }
 
 async function fetchDataset(region: string, key: DatasetKey): Promise<MarketMetric> {
@@ -126,7 +136,7 @@ export class ZillowResearchProvider implements MarketDataProvider {
           const message = error instanceof Error ? error.message : "Dataset unavailable";
           warnings.push(message);
           const dataset = DATASETS[key];
-          return [key, { label: dataset.label, value: null, unit: dataset.unit, asOf: null }] as const;
+          return [key, { label: dataset.label, value: null, unit: dataset.unit, asOf: null, history: [] }] as const;
         }
       }),
     );

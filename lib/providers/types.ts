@@ -3,6 +3,7 @@ export type MarketMetric = {
   value: number | null;
   unit: "count" | "days";
   asOf: string | null;
+  history: Array<{ date: string; value: number }>;
 };
 
 export type MarketSnapshot = {

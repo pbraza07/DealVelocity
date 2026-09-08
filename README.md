@@ -1,5 +1,7 @@
 # Deal Velocity
 
+Version 1.1.0 adds clickable underwriting evidence panels and 12-month Zillow Research metric history.
+
 Investor-focused residential sales-velocity, inventory, ARV-liquidity, and resale-risk dashboard.
 
 This repository is the standalone GitHub/Render edition. It uses conventional Next.js on Node—no Cloudflare Worker, Wrangler, Vinext, or ChatGPT hosting dependency.
