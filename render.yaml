@@ -13,4 +13,4 @@ services:
       - key: DATA_PROVIDER
         value: zillow_research
       - key: DEFAULT_MARKET_REGION
-        value: Tampa, FL
+        value: Wesley Chapel, FL
