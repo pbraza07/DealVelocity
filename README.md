@@ -1,6 +1,12 @@
 # Deal Velocity
 
-Version 1.2.4 accepts natural address input without requiring commas, periods, capitalization or single-line formatting. Full state names become abbreviations; explicit location/ZIP takes precedence over the selected market. Recognizable street-only input can inherit market context. Unit numbers, fractions and hyphens are preserved. Formatting tolerance is not a guarantee of source coverage or arbitrary spelling correction.
+Version 1.3.0 adds a free manual pin-confirmation workspace. Subject and comparison pins can be suggested by address lookup, clicked/dragged on an OpenStreetMap basemap, or entered as coordinates. Both must be explicitly confirmed before showing mileage. Moving pins, editing comparison addresses or changing the subject invalidates confirmation. Pins are session-only and are not saved on the server.
+
+Distance is a Haversine great-circle calculation (mean Earth radius 3958.761316 miles), displayed to two decimals, not survey-grade or driving distance. Radius membership uses the unrounded result; 1, 1.5 and 2 miles are explicit choices with no automatic expansion. User-confirmed pins are not independently verified. County parcel bounding-box centers and Census street-range coordinates are only starting suggestions. Manual placement works independently of nationwide geocoder or Zillow coverage, including Alaska and Hawaii. No city/ZIP centroid fallback is used. The comparison address is user supplied, not an MLS comp.
+
+The Leaflet basemap uses browser-cached standard OSM tiles with visible attribution and normal browser Referer headers; no offline downloads, tile prefetch, periodic map refresh or geocoding through Nominatim is implemented. Tile availability is best effort. Coordinate entry works without map tiles. Follow https://operations.osmfoundation.org/policies/tiles/ and replace the tile provider if traffic exceeds community service capacity.
+
+Tests: `node --test tests/address-lookup.test.mjs tests/pin-distance.test.mjs` (Node 24).
 
 ## Nationwide location lookup
 

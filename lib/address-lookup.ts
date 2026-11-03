@@ -54,7 +54,7 @@ export async function pascoAddress(full: string) {
   url.search = new URLSearchParams({
     f:"json", where:`PHYS_STREET LIKE '${quote(prefix)} %'`,
     outFields:"DIR_ID,PHYS_STREET,PHYS_CITY,PHYS_STATE,PHYS_ZIP",
-    returnGeometry:"false", resultRecordCount:"50",
+    returnGeometry:"true", outSR:"4326", resultRecordCount:"50",
   }).toString();
   const response = await fetch(url, { next:{revalidate:86400}, signal:AbortSignal.timeout(15000) });
   if (!response.ok) throw new Error("County lookup unavailable");
@@ -67,8 +67,12 @@ export async function pascoAddress(full: string) {
     (!parts[2] || p.PHYS_ZIP === parts[2].slice(0,5)));
   if (matches.length !== 1 || !/^\d+$/.test(matches[0].DIR_ID)) return null;
   const p = matches[0];
+  const feature = data.features.find((f:{attributes:Parcel})=>f.attributes.DIR_ID===p.DIR_ID);
+  const vertices: number[][] = (feature?.geometry?.rings ?? []).flat();
+  const points = vertices.filter(v=>v.length>=2&&Number.isFinite(v[0])&&Number.isFinite(v[1])&&Math.abs(v[0])<=180&&Math.abs(v[1])<=90);
+  const coordinates = points.length ? {x:(Math.min(...points.map(p=>p[0]))+Math.max(...points.map(p=>p[0])))/2,y:(Math.min(...points.map(p=>p[1]))+Math.max(...points.map(p=>p[1])))/2}:null;
   return { address:`${p.PHYS_STREET.trim()}, ${p.PHYS_CITY}, FL ${p.PHYS_ZIP}`,
-    coordinates:null, county:"Pasco County", region:"Tampa, FL", matchType:"county_parcel",
+    coordinates, coordinateQuality:coordinates?"Approximate parcel bounding-box center; confirm on map":"Coordinates unavailable", county:"Pasco County", region:"Tampa, FL", matchType:"county_parcel",
     source:"Pasco County Property Appraiser", sourceUrl:`https://search.pascopa.com/parcel.aspx?parcel=${p.DIR_ID}`,
     note:"Exact physical address matched to a county parcel. Market statistics are Tampa metro-wide, not property-level comps. Parcel address matching does not validate your ARV." };
 }
