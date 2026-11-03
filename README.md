@@ -1,6 +1,6 @@
 # Deal Velocity
 
-Version 1.2.0 replaces demonstration underwriting with live regional market screening.
+Version 1.2.1 adds explicit Wesley Chapel/Florida-to-Tampa metro resolution, Census address lookup and assumption-only ARV scenarios.
 
 Investor-focused regional housing market dashboard. Property-level underwriting is not available.
 
@@ -11,7 +11,7 @@ This repository is the standalone GitHub/Render edition. It uses conventional Ne
 - Zillow Research public CSVs provide live **metro-level** for-sale inventory, sales-count nowcast, and mean days-to-pending context.
 - No demonstration properties or unsupported ARV, liquidity, DOM, inventory, price-sensitivity or hold recommendations are shown.
 - Clickable metric cards expose reported history. Regional sales pace averages require 3, 6 or 9 consecutive reported months; they are nowcasts, not verified comp closings.
-- Metro matching is exact. Address and ARV fields are reference-only notes, not geocoded filters. Missing data is explicitly unavailable.
+- Supported city aliases map explicitly to a source metro. Address lookup uses the Census Geocoder and shows failures instead of inventing a match. ARV drives ±10% scenarios, not valuation or comp filters. Missing data is explicitly unavailable.
 - The page loads data automatically and checks hourly while open. Source files use six-hour on-demand caching. No paid worker or subscription is added.
 - This release uses Zillow Research only. Realtor.com and Redfin are not connected. No ZIP/county price trends are claimed.
 - Zillow property pages are **not scraped**. Zillow's published Terms prohibit automated queries and scraping. Zillow's free Research CSVs are aggregate regional data, not a free listing-level comp feed.

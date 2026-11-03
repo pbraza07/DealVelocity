@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { getMarketDataProvider } from "@/lib/providers";
+import { marketLocation } from "@/lib/market-location";
 
 export const dynamic = "force-dynamic";
 
@@ -11,7 +12,9 @@ export async function GET(request: Request) {
   }
 
   try {
-    const snapshot = await getMarketDataProvider().getMarketSnapshot(region);
+    const resolved = marketLocation(region);
+    const snapshot = await getMarketDataProvider().getMarketSnapshot(resolved.region);
+    if (resolved.note) snapshot.warnings.unshift(resolved.note);
     const hasData = Object.values(snapshot.metrics).some((metric) => metric.value !== null);
     return NextResponse.json(
       { ok: hasData, snapshot, error: hasData ? undefined : `No Zillow Research metro row matched “${region}”.` },
