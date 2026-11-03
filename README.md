@@ -1,6 +1,6 @@
 # Deal Velocity
 
-Version 1.2.2 replaces city exceptions with a nationwide source-backed city/state-to-metro directory.
+Version 1.2.3 adds exact physical-address matching against Pasco County public parcel records to supplement Census coverage. City/state-to-metro resolution remains nationwide and source-backed.
 
 ## Nationwide location lookup
 
@@ -22,7 +22,8 @@ This repository is the standalone GitHub/Render edition. It uses conventional Ne
 - Zillow Research public CSVs provide live **metro-level** for-sale inventory, sales-count nowcast, and mean days-to-pending context.
 - No demonstration properties or unsupported ARV, liquidity, DOM, inventory, price-sensitivity or hold recommendations are shown.
 - Clickable metric cards expose reported history. Regional sales pace averages require 3, 6 or 9 consecutive reported months; they are nowcasts, not verified comp closings.
-- The national city directory maps covered cities explicitly to their source metro. Address lookup uses the Census Geocoder and shows failures instead of inventing a match. ARV drives ±10% scenarios, not valuation or comp filters. Missing data is explicitly unavailable.
+- The national city directory maps covered cities explicitly to their source metro. Address lookup uses Census nationwide and the Pasco County Property Appraiser public GIS for explicitly entered Florida cities. County results require a unique normalized physical street/city/state/ZIP match, with a source-record link; no owner information is requested. County matching returns no invented coordinates. Census results are labeled street-range matches, not rooftops. Unmatched addresses remain unverified. ARV drives ±10% scenarios, not valuation or comp filters. Missing data is explicitly unavailable.
+- Address regression tests: `node --test tests/address-lookup.test.mjs` (Node 24). The county adapter uses bounded queries, a 15-second timeout and 24-hour Next.js response caching. The exact address `29970 Chapel Chase Dr, Wesley Chapel, FL 33545` matches the county source even though Census currently has no match. This is not a nationwide parcel feed or an ARV validation service.
 - The page loads data automatically and checks hourly while open. Source files use six-hour on-demand caching. No paid worker or subscription is added.
 - This release uses Zillow Research only. Realtor.com and Redfin are not connected. No ZIP/county price trends are claimed.
 - Zillow property pages are **not scraped**. Zillow's published Terms prohibit automated queries and scraping. Zillow's free Research CSVs are aggregate regional data, not a free listing-level comp feed.
