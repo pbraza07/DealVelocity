@@ -74,7 +74,6 @@ function findRegionRow(rows: string[][], region: string) {
   const wanted = region.trim().toLowerCase();
   return (
     rows.slice(1).find((row) => row[regionIndex]?.trim().toLowerCase() === wanted) ??
-    rows.slice(1).find((row) => row[regionIndex]?.trim().toLowerCase().includes(wanted)) ??
     null
   );
 }
@@ -95,7 +94,7 @@ function latestMetric(rows: string[][], region: string, key: DatasetKey): Market
       const raw = row[index];
       if (!raw?.trim()) return [];
       const value = Number(raw.replaceAll(",", ""));
-      return Number.isFinite(value) ? [{ date: column, value }] : [];
+      return Number.isFinite(value) && value >= 0 ? [{ date: column, value }] : [];
     })
     .slice(0, 12)
     .reverse();
@@ -104,7 +103,7 @@ function latestMetric(rows: string[][], region: string, key: DatasetKey): Market
     const raw = row[index];
     if (!raw?.trim()) continue;
     const value = Number(raw.replaceAll(",", ""));
-    if (Number.isFinite(value)) {
+    if (Number.isFinite(value) && value >= 0) {
       return { label: dataset.label, value, unit: dataset.unit, asOf: column, history };
     }
   }
@@ -115,6 +114,7 @@ function latestMetric(rows: string[][], region: string, key: DatasetKey): Market
 async function fetchDataset(region: string, key: DatasetKey): Promise<MarketMetric> {
   const dataset = DATASETS[key];
   const response = await fetch(dataset.url, {
+    signal: AbortSignal.timeout(20000),
     headers: { Accept: "text/csv", "User-Agent": "DealVelocity/1.0" },
     next: { revalidate: 21_600 },
   });

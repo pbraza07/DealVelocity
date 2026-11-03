@@ -1,19 +1,23 @@
 # Deal Velocity
 
-Version 1.1.0 adds clickable underwriting evidence panels and 12-month Zillow Research metric history.
+Version 1.2.0 replaces demonstration underwriting with live regional market screening.
 
-Investor-focused residential sales-velocity, inventory, ARV-liquidity, and resale-risk dashboard.
+Investor-focused regional housing market dashboard. Property-level underwriting is not available.
 
 This repository is the standalone GitHub/Render edition. It uses conventional Next.js on Node—no Cloudflare Worker, Wrangler, Vinext, or ChatGPT hosting dependency.
 
 ## What is live today
 
 - Zillow Research public CSVs provide live **metro-level** for-sale inventory, sales-count nowcast, and mean days-to-pending context.
-- The 3/6/9-month comp analysis, price sensitivity, and underwriting dashboard are fully interactive, but the bundled address-level properties are demonstration records.
+- No demonstration properties or unsupported ARV, liquidity, DOM, inventory, price-sensitivity or hold recommendations are shown.
+- Clickable metric cards expose reported history. Regional sales pace averages require 3, 6 or 9 consecutive reported months; they are nowcasts, not verified comp closings.
+- Metro matching is exact. Address and ARV fields are reference-only notes, not geocoded filters. Missing data is explicitly unavailable.
+- The page loads data automatically and checks hourly while open. Source files use six-hour on-demand caching. No paid worker or subscription is added.
+- This release uses Zillow Research only. Realtor.com and Redfin are not connected. No ZIP/county price trends are claimed.
 - Zillow property pages are **not scraped**. Zillow's published Terms prohibit automated queries and scraping. Zillow's free Research CSVs are aggregate regional data, not a free listing-level comp feed.
 - The provider boundary is prepared for MLS Grid. After approval, implement the market-specific RESO mapping in `lib/providers/mls-grid.ts` without rewriting the dashboard calculations.
 
-Do not use the demonstration comp results to make an acquisition decision.
+Do not use regional aggregates alone to make an acquisition decision. Obtain verified subject comparables first.
 
 ## Run locally
 

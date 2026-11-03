@@ -2,9 +2,9 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Deal Velocity | Flip Resale Underwriting",
+  title: "Deal Velocity | Live Market Screening",
   description:
-    "Analyze sales velocity, months of inventory, ARV liquidity, and expected resale time for residential fix-and-flip investments.",
+    "Free regional housing market screening with published inventory, sales nowcasts and days-to-pending history. No demonstration comparable properties.",
   icons: {
     icon: "/favicon.svg",
     shortcut: "/favicon.svg",
