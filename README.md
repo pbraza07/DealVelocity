@@ -1,6 +1,6 @@
 # Deal Velocity
 
-Version 1.2.3 adds exact physical-address matching against Pasco County public parcel records to supplement Census coverage. City/state-to-metro resolution remains nationwide and source-backed.
+Version 1.2.4 accepts natural address input without requiring commas, periods, capitalization or single-line formatting. Full state names become abbreviations; explicit location/ZIP takes precedence over the selected market. Recognizable street-only input can inherit market context. Unit numbers, fractions and hyphens are preserved. Formatting tolerance is not a guarantee of source coverage or arbitrary spelling correction.
 
 ## Nationwide location lookup
 

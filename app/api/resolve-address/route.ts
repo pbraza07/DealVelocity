@@ -19,7 +19,7 @@ export async function POST(request: Request) {
     if (!response.ok) throw new Error("Census lookup unavailable");
     const result = await response.json();
     const matches = result.result?.addressMatches ?? [];
-    if (matches.length !== 1) return NextResponse.json({ error: "No unique property match was found in the available public address sources. Use Street, City, State ZIP (for example: 29970 Chapel Chase Dr, Wesley Chapel, FL 33545). You can load a city market separately; this does not verify the property." }, { status: 422 });
+    if (matches.length !== 1) return NextResponse.json({ error: "No unique property match was found in the available public address sources. Punctuation is optional. Check the house number and spelling, and include city/state or ZIP. You can load a city market separately; this does not verify the property." }, { status: 422 });
     const match = matches[0];
     const county = match.geographies?.Counties?.[0];
     const city = match.addressComponents?.city;

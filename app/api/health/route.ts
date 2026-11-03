@@ -4,7 +4,7 @@ export function GET() {
   return NextResponse.json({
     ok: true,
     service: "deal-velocity",
-    version: "1.2.3",
+    version: "1.2.4",
     mode: "market_screening",
     propertyLevelUnderwriting: false,
     provider: process.env.DATA_PROVIDER ?? "zillow_research",
