@@ -36,42 +36,29 @@ npm start
 
 Health endpoint: `GET /api/health`
 
-## Put the project on GitHub
+## Production workflow
 
-1. Create an empty GitHub repository named `deal-velocity`.
-2. Unzip this package and open a terminal in the extracted folder.
-3. Run:
+GitHub and Render are the production source of truth for this project:
 
-```bash
-git init
-git add .
-git commit -m "Initial Deal Velocity Render app"
-git branch -M main
-git remote add origin https://github.com/YOUR-USER/deal-velocity.git
-git push -u origin main
-```
-
-If you prefer the GitHub website, choose **Add file → Upload files**, upload the extracted files, and commit them to `main`.
-
-## Deploy on Render
-
-The included `render.yaml` is a ready-to-use Blueprint.
-
-1. Sign in to Render and connect GitHub.
-2. Choose **New → Blueprint**.
-3. Select the `deal-velocity` repository.
-4. Confirm the `deal-velocity` web service and deploy.
-5. Open the generated `onrender.com` URL after the build completes.
-
-Render reads these settings from `render.yaml`:
-
+- Repository: [pbraza07/DealVelocity](https://github.com/pbraza07/DealVelocity)
+- Production service: [DealVelocity on Render](https://dealvelocity.onrender.com)
+- Production branch: `main`
+- Auto-deploy: every commit to `main`
 - Build: `npm ci && npm run build`
-- Start: `npm start` (binds to `0.0.0.0` and Render's `PORT`)
-- Health check: `/api/health`
-- Node: `22.13.0`
-- Interim provider: `zillow_research`
+- Start: `npm start`
+- Health check: `GET /api/health`
 
-The free Render web service sleeps after inactivity and can take about a minute to wake.
+All application changes must be committed to this GitHub repository. Render deploys the linked `main` branch automatically; the production URL should be verified only after the Render deploy reaches `live` and the health endpoint passes. Do not treat ZIP packages or edits made only in the Render dashboard as the canonical application source.
+
+Recommended release sequence:
+
+1. Make and test the change in a working branch or local checkout.
+2. Commit the tested files to GitHub and merge or push them to `main`.
+3. Monitor the matching Render deploy until its status is `live`.
+4. Verify `/api/health`, the changed screen, and recent runtime logs.
+5. Record the Git commit and Render deploy in the handoff.
+
+The included `render.yaml` preserves the service configuration for recovery or recreation. The current service is already linked to GitHub and should normally be updated through commits rather than manual deploys.
 
 ## Data-provider configuration
 
