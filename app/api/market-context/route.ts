@@ -12,7 +12,7 @@ export async function GET(request: Request) {
   }
 
   try {
-    const resolved = marketLocation(region);
+    const resolved = await marketLocation(region);
     const snapshot = await getMarketDataProvider().getMarketSnapshot(resolved.region);
     if (resolved.note) snapshot.warnings.unshift(resolved.note);
     const hasData = Object.values(snapshot.metrics).some((metric) => metric.value !== null);

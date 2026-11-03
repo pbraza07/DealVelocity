@@ -1,6 +1,17 @@
 # Deal Velocity
 
-Version 1.2.1 adds explicit Wesley Chapel/Florida-to-Tampa metro resolution, Census address lookup and assumption-only ARV scenarios.
+Version 1.2.2 replaces city exceptions with a nationwide source-backed city/state-to-metro directory.
+
+## Nationwide location lookup
+
+- Source: Zillow Research City ZHVI CSV metadata (RegionName, State, Metro, CountyName), not a manually maintained city list.
+- Supports all 50 state names/abbreviations, DC and Puerto Rico input; actual coverage depends on source rows.
+- Streams the directory instead of retaining the full historical CSV in memory. Concurrent lookups share one download; the compact directory is cached in-process for 24 hours and refreshed on demand.
+- Exact normalized city and state matching; multiple markets are rejected as ambiguous. Missing cities or cities with no assigned metro produce explicit coverage messages.
+- Full metro names are joined to shortened metric-series names only when primary-city and state matching identifies exactly one series.
+- No nearest-city fallback, invented data, or claim that every U.S. locality is covered.
+- Address lookup and proposed-ARV scenarios remain available; market statistics remain metro-level.
+- Verified examples: Alpharetta GA, Wesley Chapel FL, Irvine CA, Plano TX, New York NY and Springfield IL.
 
 Investor-focused regional housing market dashboard. Property-level underwriting is not available.
 
@@ -11,7 +22,7 @@ This repository is the standalone GitHub/Render edition. It uses conventional Ne
 - Zillow Research public CSVs provide live **metro-level** for-sale inventory, sales-count nowcast, and mean days-to-pending context.
 - No demonstration properties or unsupported ARV, liquidity, DOM, inventory, price-sensitivity or hold recommendations are shown.
 - Clickable metric cards expose reported history. Regional sales pace averages require 3, 6 or 9 consecutive reported months; they are nowcasts, not verified comp closings.
-- Supported city aliases map explicitly to a source metro. Address lookup uses the Census Geocoder and shows failures instead of inventing a match. ARV drives ±10% scenarios, not valuation or comp filters. Missing data is explicitly unavailable.
+- The national city directory maps covered cities explicitly to their source metro. Address lookup uses the Census Geocoder and shows failures instead of inventing a match. ARV drives ±10% scenarios, not valuation or comp filters. Missing data is explicitly unavailable.
 - The page loads data automatically and checks hourly while open. Source files use six-hour on-demand caching. No paid worker or subscription is added.
 - This release uses Zillow Research only. Realtor.com and Redfin are not connected. No ZIP/county price trends are claimed.
 - Zillow property pages are **not scraped**. Zillow's published Terms prohibit automated queries and scraping. Zillow's free Research CSVs are aggregate regional data, not a free listing-level comp feed.

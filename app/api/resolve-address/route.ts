@@ -20,7 +20,7 @@ export async function POST(request: Request) {
     const city = match.addressComponents?.city;
     const state = match.addressComponents?.state;
     const countyMetro: Record<string,string> = { "12101":"Tampa, FL", "12057":"Tampa, FL", "12103":"Tampa, FL", "12053":"Tampa, FL", "12083":"Ocala, FL" };
-    const resolved = countyMetro[county?.GEOID] ?? marketLocation(city + ", " + state).region;
+    const resolved = countyMetro[county?.GEOID] ?? (await marketLocation(city + ", " + state)).region;
     return NextResponse.json({ address: match.matchedAddress, coordinates: match.coordinates, county: county?.NAME ?? null, region: resolved, source: "U.S. Census Geocoder", note: "Address matched by Census. Market statistics remain metro-wide; no property valuation or attributes are supplied." }, { headers: { "Cache-Control":"no-store" } });
   } catch {
     return NextResponse.json({ error: "Address lookup is temporarily unavailable. You can still load a city/metro separately." }, { status: 503 });

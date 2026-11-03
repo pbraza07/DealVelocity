@@ -72,6 +72,21 @@ function findRegionRow(rows: string[][], region: string) {
   const regionIndex = header.indexOf("RegionName");
   if (regionIndex < 0) return null;
   const wanted = region.trim().toLowerCase();
+  const exact = rows.slice(1).find(row => row[regionIndex]?.trim().toLowerCase() === wanted);
+  if (exact) return exact;
+  // Zillow's city directory uses full CBSA names, while metric series use
+  // shortened primary-city names. Require a unique primary-city + state match.
+  const split = wanted.lastIndexOf(",");
+  const fullCity = wanted.slice(0, split).trim();
+  const states = wanted.slice(split + 1).trim().split("-");
+  const candidates = rows.slice(1).filter(row => {
+    const name = row[regionIndex]?.trim().toLowerCase() ?? "";
+    const at = name.lastIndexOf(",");
+    if (at < 0 || split < 0) return false;
+    const city = name.slice(0, at).trim(), state = name.slice(at + 1).trim();
+    return states.includes(state) && (fullCity === city || fullCity.startsWith(city + "-"));
+  });
+  if (candidates.length === 1) return candidates[0];
   return (
     rows.slice(1).find((row) => row[regionIndex]?.trim().toLowerCase() === wanted) ??
     null
